@@ -1,54 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+:root {
+    --color-primary: #00ffff;
+    --color-secondary: #ff00ff;
+    --color-tertiary: #61dafb;
+    --bg-color: #282c34;
+    --card-bg-color: #3a3f4b;
+}
+
+.App, .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
 .App {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #282c34;
-  min-height: 100vh;
-  min-width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.App.visible {
+    opacity: 1;
 }
 
 .App-header {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 h1 {
-  font-size: 2.5rem;
-  color: #61dafb;
+    font-size: 2.5rem;
+    color: var(--color-tertiary);
 }
 
 .loading, .error {
-  font-size: 1.2rem;
-  margin-top: 2rem;
+    font-size: 1.2rem;
+    margin-top: 2rem;
 }
 
 .error {
-  color: #ff6b6b;
+    color: #ff6b6b;
 }
 
 .leaderboard-info {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
 }
 
 .info-card {
-  background-color: #3a3f4b;
-  border-radius: 10px;
-  padding: 1.5rem;
-  width: 200px;
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 200px;
 }
 
 .info-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .highlight {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #61dafb;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-tertiary);
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    perspective: 3000px;
+    z-index: 9999;
+    animation: REALITY_WARP 10s infinite alternate;
+    transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+.loading.fade-out {
+    transform: scale(1.5);
+    opacity: 0;
+}
+
+.loading-container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    transform-style: preserve-3d;
+    animation: REALITY_WARP 5s infinite linear;
+}
+
+.loading-spinner {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border: 25px solid transparent;
+    border-top-color: var(--color-primary);
+    border-right-color: var(--color-secondary);
+    border-bottom-color: var(--color-tertiary);
+    border-left-color: white;
+    border-radius: 50%;
+    animation: REALITY_WARP 3s infinite linear, spin 2s infinite reverse;
+    box-shadow:
+            0 0 100px rgba(97,218,251,0.5),
+            0 0 200px rgba(255,0,255,0.3),
+            inset 0 0 50px rgba(0,255,255,0.2);
+    mix-blend-mode: screen;
+}
+
+.loading-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    color: transparent;
+    background: linear-gradient(
+            45deg,
+            var(--color-primary),
+            var(--color-secondary),
+            var(--color-tertiary)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-shadow:
+            0 0 20px var(--color-primary),
+            0 0 40px var(--color-secondary);
+    animation: REALITY_WARP 2.5s infinite alternate, flicker 0.1s infinite alternate;
+    z-index: 10;
+}
+
+.particle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(
+            circle,
+            var(--color-primary),
+            var(--color-secondary)
+    );
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: QUANTUM_PARTICLE_STORM 5s infinite linear, pulse 2s infinite alternate;
+    mix-blend-mode: screen;
+}
+
+@keyframes REALITY_WARP {
+    0%, 100% {
+        transform: rotate(0deg) scale(1) perspective(1000px) rotateX(45deg) rotateY(45deg);
+        filter: hue-rotate(0deg) brightness(1) contrast(100%);
+    }
+    50% {
+        transform: rotate(360deg) scale(1.5) perspective(500px) rotateX(-45deg) rotateY(-45deg);
+        filter: hue-rotate(180deg) brightness(1.5) contrast(150%);
+    }
+}
+
+@keyframes QUANTUM_PARTICLE_STORM {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(720deg) scale(3);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes flicker {
+    0% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.5); }
+    100% { transform: scale(1.5); }
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.content-fade-in {
+    animation: contentFadeIn 1s ease-in-out forwards;
 }
