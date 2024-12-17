@@ -4,7 +4,8 @@ import './App.css';
 
 function App() {
     const regex = /<div class="rR">#(\d+)<\/div>(?:(?!<div class="rR">#).)*?<div class="playerLink"><a class="playerName" href="[^"]*">Cone<\/a><\/div>.*?<div class="score">([\d,]+)\s*<\/div>/s;
-    const url = 'https://cors-proxy.fringe.zone/https://steamcommunity.com/stats/2217000/leaderboards/14800950?sr=45';
+    const url = 'https://cors-proxy.fringe.zone/https://steamcommunity.com/stats/2217000/leaderboards/14800950?sr=';
+
     const [loading, setLoading] = useState(true);
     const [position, setPosition] = useState<string | null>(null);
     const [points, setPoints] = useState<string | null>(null);
@@ -12,15 +13,25 @@ function App() {
     const [contentVisible, setContentVisible] = useState(false);
 
     useEffect(() => {
+        let idx = 1;
+        const idxToJump = idx + 15;
         const fetchLeaderboardData = async () => {
             try {
-                const response = await axios.get(url);
-                const coneMatch = response.data.match(regex);
-                if (coneMatch) {
-                    setPosition(coneMatch[1])
-                    setPoints(coneMatch[2])
+                let matchFound = false;
+                let response;
+                while (!matchFound) {
+                    response = await axios.get(url + idx);
+                    const coneMatch = response.data.match(regex);
+                    if (coneMatch) {
+                        setPosition(coneMatch[1])
+                        setPoints(coneMatch[2])
+                    } else {
+                        idx += idxToJump
+                    }
+                    matchFound = coneMatch;
                 }
-                setLeaderboardData(response.data);
+
+                setLeaderboardData(response?.data);
                 setTimeout(() => {
                     setLoading(false);
                     setTimeout(() => setContentVisible(true), 500);
